@@ -1,0 +1,55 @@
+<canvas id="foo" width="1000" height="1000"></canvas>
+
+<script type="text/javascript">
+  /** @type {HTMLCanvasElement} */
+  const canvas = document.getElementById('foo');
+  const ctx = canvas.getContext('2d');
+
+  const points = [];
+  for (let i = 0; i < 10000; i++) {
+    const x = (Math.random() * 1000) | 0;
+    const y = (Math.random() * 1000) | 0;
+    points.push(x, y);
+  }
+
+  function drawFrame() {
+    const startDraw = Date.now();
+    ctx.fillStyle = 'black';
+    ctx.fillRect(0, 0, 1000, 1000);
+
+    ctx.beginPath();
+
+    for (let i = 0; i < points.length; i += 2) {
+      ctx.moveTo(500, 500);
+      ctx.lineTo(points[i], points[i + 1]);
+    }
+
+    ctx.lineWidth = 10;
+    ctx.strokeStyle = `rgb(${(Math.random() * 256) | 0}, 0, 0)`;
+    ctx.stroke();
+
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = `rgb(0,${(Math.random() * 256) | 0}, 0)`;
+    ctx.stroke();
+
+    ctx.closePath();
+
+    console.log('draw take:', Date.now() - startDraw);
+
+    Promise.resolve().then(() => {
+      console.log('draw take after micro task:', Date.now() - startDraw);
+    });
+    setTimeout(() => {
+      console.log('draw take after macro task:', Date.now() - startDraw);
+    }, 0);
+    requestIdleCallback(() => {
+      console.log('draw take after idle:', Date.now() - startDraw);
+    });
+  }
+
+  drawFrame();
+
+  document.onclick = () => {
+    drawFrame();
+  };
+</script>
