@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script src="https://d157l7jdn8e5sf.cloudfront.net/dev/pixi-legacy.js"></script>
+    <script src="https://pixijs.download/dev/packages/graphics-extras.js"></script>
+
+    <script>
+      const app = new PIXI.Application({
+        antialias: true,
+        width: 1000,
+        height: 1000,
+      });
+      window.app = app;
+      app.ticker.remove(app.render, app);
+      document.body.appendChild(app.view);
+
+      const graphics = new PIXI.Graphics();
+
+      const points = [];
+      for (let i = 0; i < 10000; i++) {
+        const x = (Math.random() * 1000) | 0;
+        const y = (Math.random() * 1000) | 0;
+        points.push(x, y);
+      }
+
+      graphics.lineStyle(10, 0xff0000, 1);
+      graphics.line;
+      for (let i = 0; i < points.length; i += 2) {
+        graphics.moveTo(500, 500);
+        graphics.lineTo(points[i], points[i + 1]);
+      }
+      graphics.lineStyle(2, 0x00ff00, 1);
+      for (let i = 0; i < points.length; i += 2) {
+        graphics.moveTo(500, 500);
+        graphics.lineTo(points[i], points[i + 1]);
+      }
+
+      app.stage.addChild(graphics);
+
+      function renderFrame() {
+        const start = Date.now();
+        app.render();
+        console.log('render cost', Date.now() - start);
+        app.stage.scale.x *= 1.1;
+        app.stage.scale.y *= 1.1;
+      }
+
+      renderFrame();
+
+      document.onclick = renderFrame;
+    </script>
+  </body>
+</html>
